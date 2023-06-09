@@ -1,14 +1,9 @@
 import { json } from "@remix-run/node";
-import React, { useState } from "react";
-import { useSearchParams, useLoaderData, useParams } from "@remix-run/react";
+import React from "react";
+import { useLoaderData } from "@remix-run/react";
 import HerbCard from "../components/HerbCard";
 
 export async function loader({ request, params }) {
-  const url = new URL(request.url);
-  const searchParams = new URLSearchParams(url.search);
-  const pageSize = parseInt(searchParams.get("pageSize") || 15);
-  const page = parseInt(searchParams.get("page") || 0);
-
   const herbRes = await fetch(
     `http://127.0.0.1:5000/herbs?herb_name=${params.herb}`
   );
