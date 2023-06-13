@@ -2,20 +2,33 @@ import { PaperClipIcon } from "@heroicons/react/20/solid";
 
 export default function HerbCard({ herb }) {
   return (
-    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-      <div className="px-4 py-5 sm:px-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
+    <div className="sm:rounded-lg overflow-hidden bg-white shadow">
+      {herb.scientific_name ? (
+        <img
+          className="max-h-64 object-cover w-full"
+          src={`/herb_images/${herb.scientific_name.replace(/ /g, "_")}.jpg`}
+          alt=""
+          onError={(e) => {
+            e.target.src = "https://placehold.co/280x198";
+          }}
+        />
+      ) : (
+        <img className="hidden" alt="" src="https://placehold.co/280x198" />
+      )}
+
+      <div className="sm:px-6 px-4 py-5">
+        <h3 className="text-lg font-medium leading-6 text-gray-900">
           {herb.name}
         </h3>
-        <p className="mt-1 max-w-2xl text-sm text-gray-500">
+        <p className="max-w-2xl mt-1 text-sm text-gray-500">
           {herb.scientific_name}
         </p>
       </div>
-      <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
+      <div className="sm:p-0 px-4 py-5 border-t border-gray-200">
         <dl className="sm:divide-y sm:divide-gray-200">
-          <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 py-4">
             <dt className="text-sm font-medium text-gray-500">Properties</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <dd className="sm:mt-0 sm:col-span-2 mt-1 text-sm text-gray-900">
               {herb.activities
                 .split(", ")
                 .slice()
@@ -30,41 +43,57 @@ export default function HerbCard({ herb }) {
                 ))}
             </dd>
           </div>
-          <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 py-4">
             <dt className="text-sm font-medium text-gray-500">
               Healing Symptoms
             </dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <dd className="sm:mt-0 sm:col-span-2 mt-1 text-sm text-gray-900">
               {herb.indications
                 .split(", ")
                 .slice(0, 5)
                 .map((indication, index) => (
                   <span
                     key={index}
-                    className="inline-flex items-center mx-1 my-1 px-2.5 py-0.5 rounded-md text-sm font-medium bg-pink-500 text-white"
+                    className="inline-flex items-center mx-1 my-1 px-2.5 py-0.5 rounded-md text-sm font-medium bg-zinc-800 text-zinc-100"
                   >
                     {indication}
                   </span>
                 ))}
             </dd>
           </div>
-          <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-            <dt className="text-sm font-medium text-gray-500">Email address</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              margotfoster@example.com
+          <div className="sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 py-4">
+            <dt className="text-sm font-medium text-gray-500">Dosages</dt>
+            <dd className="sm:mt-0 sm:col-span-2 mt-1 text-sm text-gray-900">
+              {herb.dosages.split(", ").map((dosage, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center mx-1 my-1 px-2.5 py-0.5 rounded-md text-sm font-medium bg-white  text-gray-7800"
+                >
+                  {dosage}
+                </span>
+              ))}
             </dd>
           </div>
-          <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 py-4">
             <dt className="text-sm font-medium text-gray-500">
-              Salary expectation
+              Contraindications
             </dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              $120,000
+            <dd className="sm:mt-0 sm:col-span-2 mt-1 text-sm text-red-100">
+              {herb.contraindications
+                .split(", ")
+                .map((contraindication, index) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center mx-1 my-1 px-2.5 py-0.5 rounded-md text-sm font-medium bg-rose-600 text-rose-50"
+                  >
+                    {contraindication}
+                  </span>
+                ))}
             </dd>
           </div>
-          <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 py-4">
             <dt className="text-sm font-medium text-gray-500">About</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <dd className="sm:mt-0 sm:col-span-2 mt-1 text-sm text-gray-900">
               Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
               incididunt cillum culpa consequat. Excepteur qui ipsum aliquip
               consequat sint. Sit id mollit nulla mollit nostrud in ea officia
@@ -72,43 +101,43 @@ export default function HerbCard({ herb }) {
               reprehenderit deserunt qui eu.
             </dd>
           </div>
-          <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 py-4">
             <dt className="text-sm font-medium text-gray-500">Attachments</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              <ul className="border border-gray-200 rounded-md divide-y divide-gray-200">
-                <li className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                  <div className="w-0 flex-1 flex items-center">
+            <dd className="sm:mt-0 sm:col-span-2 mt-1 text-sm text-gray-900">
+              <ul className="border border-gray-200 divide-y divide-gray-200 rounded-md">
+                <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+                  <div className="flex items-center flex-1 w-0">
                     <PaperClipIcon
-                      className="flex-shrink-0 h-5 w-5 text-gray-400"
+                      className="flex-shrink-0 w-5 h-5 text-gray-400"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 flex-1 w-0 truncate">
+                    <span className="flex-1 w-0 ml-2 truncate">
                       resume_back_end_developer.pdf
                     </span>
                   </div>
-                  <div className="ml-4 flex-shrink-0">
+                  <div className="flex-shrink-0 ml-4">
                     <a
                       href="/"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
+                      className="hover:text-indigo-500 font-medium text-indigo-600"
                     >
                       Download
                     </a>
                   </div>
                 </li>
-                <li className="pl-3 pr-4 py-3 flex items-center justify-between text-sm">
-                  <div className="w-0 flex-1 flex items-center">
+                <li className="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+                  <div className="flex items-center flex-1 w-0">
                     <PaperClipIcon
-                      className="flex-shrink-0 h-5 w-5 text-gray-400"
+                      className="flex-shrink-0 w-5 h-5 text-gray-400"
                       aria-hidden="true"
                     />
-                    <span className="ml-2 flex-1 w-0 truncate">
+                    <span className="flex-1 w-0 ml-2 truncate">
                       coverletter_back_end_developer.pdf
                     </span>
                   </div>
-                  <div className="ml-4 flex-shrink-0">
+                  <div className="flex-shrink-0 ml-4">
                     <a
                       href="/"
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
+                      className="hover:text-indigo-500 font-medium text-indigo-600"
                     >
                       Download
                     </a>

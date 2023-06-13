@@ -18,17 +18,22 @@ function Search() {
   const [search, setSearch] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const inputRef = useRef();
+  const [index, setIndex] = useState("fixws");
+
+  const handleOptionChange = (option) => {
+    setIndex(option.name === "Herbs" ? "fixws" : "symptoms");
+  };
 
   const fetchResults = async () => {
     if (search !== "") {
-      const { hits } = await client.index(INDEX).search(search);
+      const { hits } = await client.index(index).search(search);
       setHerbs(hits);
     }
   };
 
   useEffect(() => {
     fetchResults();
-  }, [search]);
+  }, [search, index]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -53,18 +58,20 @@ function Search() {
 
   return (
     <div className="sm:px-6 lg:px-8 max-w-full px-4 py-12 mx-auto">
-      <div className="max-w-md mx-auto relative items-start">
+      <div className="relative items-start max-w-md mx-auto">
         <div className="z-10">
-          <SearchOptions />
+          <SearchOptions onOptionChange={handleOptionChange} />
         </div>
-        <div className="rounded-xl ring-gray-500/10 bg-white w-full overflow-hidden transition-all transform border divide-y divider-gray-500/10 shadow-lg">
+        <div className="rounded-xl ring-gray-500/10 divider-gray-500/10 w-full overflow-hidden transition-all transform bg-white border divide-y shadow-lg">
           <div className="relative">
             <input
-              className="block mx-auto w-full px-6 sm:text-sm rounded-xl focus:outline-none focus:ring-0 h-12 pr-4 text-pink-600 placeholder-gray-500 bg-transparent border-0"
+              className="sm:text-sm rounded-xl focus:outline-none focus:ring-0 block w-full h-12 px-6 pr-4 mx-auto text-teal-600 placeholder-gray-500 bg-transparent border-0"
               type="text"
               value={search}
               ref={inputRef}
-              placeholder="Search for a herb"
+              placeholder={
+                index === "fixws" ? "Search for a herb" : "Search for a symptom"
+              }
               autoFocus={true}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -78,31 +85,47 @@ function Search() {
             />
           </div>
           {isVisible && (
-            <ul className="max-h-72 scroll-py-2 z-50 py-2 overflow-y-auto text-sm text-gray-800">
-              {herbs.map((herb) => {
+            <ul className="max-h-72 scroll-py-2 divide-zinc-200 border-zinc-200 z-50 py-2 overflow-y-auto text-sm text-gray-800 border divide-y-2">
+              {herbs.map((item) => {
                 return (
-                  <a key={herb.id} href={herb.url} className="group">
-                    <li className="hover:bg-pink-200 flex items-center px-3 py-2 cursor-pointer text-left select-none">
+                  <a key={item.id} href={item.url} className="group">
+                    <li className="hover:bg-zinc-50 flex items-center px-3 py-2 text-left cursor-pointer select-none">
                       <div className="mb-2">
                         <div className="inline-flex">
-                          <p className="text-base font-semibold group-hover:text-white">
-                            {herb.name}
+                          <p className="group-hover:text-black text-base font-semibold">
+                            {index === "fixws" ? item.name : item.symptom_name}
                           </p>
-                          <p className="italic text-gray-300 ml-1 text-sm self-center group-hover:text-pink-600">
-                            {herb.scientific_name}
-                          </p>
+                          {index === "fixws" && (
+                            <p className="group-hover:text-teal-600 self-center ml-1 text-sm italic text-gray-300">
+                              {item.scientific_name}
+                            </p>
+                          )}
                         </div>
-                        <div className="space-x-2 pt-1">
-                          {herb.indications
-                            .slice(0, 5)
-                            .map((indication, index) => (
-                              <span
-                                className="hover:bg-pink-500 hover:text-white inline-flex items-center rounded-md bg-white px-2 py-1 text-xs font-medium text-gray-400 ring-1 ring-inset ring-gray-500/10"
-                                key={index}
-                              >
-                                {indication}
-                              </span>
-                            ))}
+                        <div className="pt-1 space-x-2">
+                          {index === "fixws" &&
+                            item.indications
+                              .slice(0, 5)
+                              .map((indication, index) => (
+                                <span
+                                  className="bg-zinc-800 ring-1 ring-inset ring-gray-500/10 text-zinc-100 inline-flex items-center px-2 py-1 text-xs font-medium rounded-md"
+                                  key={index}
+                                >
+                                  {indication}
+                                </span>
+                              ))}
+                          {index === "symptoms" && (
+                            <>
+                              <p>{item.description}</p>
+                              {item.herbs.map((herb, index) => (
+                                <span
+                                  className="bg-zinc-800 ring-1 ring-inset ring-gray-500/10 text-zinc-100 inline-flex items-center px-2 py-1 text-xs font-medium rounded-md"
+                                  key={index}
+                                >
+                                  {herb}
+                                </span>
+                              ))}
+                            </>
+                          )}
                         </div>
                       </div>
                     </li>
